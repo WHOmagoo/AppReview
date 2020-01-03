@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:text="Day 12"
         android:textSize="42dp"
+        android:id="@+id/dayCounterText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

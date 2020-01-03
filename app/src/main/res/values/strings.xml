@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">AppReview</string>
+    <string name="app_name">App Review Helper</string>
     <string name="action_settings">Settings</string>
     <string name="appUnused">App not used today</string>
     <string name="appUsed">App used today</string>
+    <string name="day">Day %1$d</string>
 </resources>
