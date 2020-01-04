@@ -6,4 +6,9 @@
     <string name="day">Day %1$d</string>
     <string name="action_increment_day">Next Day</string>
     <string name="action_spoof_review">Spoof Review</string>
+    <string name="title_activity_review">Review</string>
+    <string name="review_description"> Rate your current levels</string>
+    <string name="label_anxiety">Anxiety level</string>
+    <string name="label_happiness">Happiness level</string>
+    <string name="next">Launch App →</string>
 </resources>
