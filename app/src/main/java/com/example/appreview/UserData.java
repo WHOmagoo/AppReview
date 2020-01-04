@@ -43,4 +43,9 @@ public class UserData {
         data.add(null);
         curData = null;
     }
+
+    public String makeCSV(){
+        //TODO finish this.
+        return "";
+    }
 }
