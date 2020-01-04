@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Review"
+    tools:showIn="@layout/activity_review">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="93dp"
+        tools:layout_editor_absoluteY="423dp">
+
+        <TextView
+            android:id="@+id/review_instructions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="166dp"
+            android:text="@string/review_description"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/label_hapiness"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_happiness"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+        <view
+            android:id="@+id/happiness_slider"
+            class="androidx.appcompat.widget.AppCompatRatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp" />
+
+        <TextView
+            android:id="@+id/label_anxiety"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_anxiety"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+        <view
+            android:id="@+id/anxiety_slider"
+            class="androidx.appcompat.widget.AppCompatRatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"></LinearLayout>
+
+        <Button
+            android:id="@+id/submit_ratings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginEnd="32sp"
+            android:layout_marginBottom="32sp"
+            android:onClick="onSubmitData"
+            android:text="@string/next" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
