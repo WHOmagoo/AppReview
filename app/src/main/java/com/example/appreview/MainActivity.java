@@ -1,5 +1,6 @@
 package com.example.appreview;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -84,8 +85,9 @@ public class MainActivity extends AppCompatActivity {
         setReviewedToday(false);
     }
 
-    public void onClickBtn(View view) {
-        Toast.makeText(this, "Page to be implemented", Toast.LENGTH_LONG).show();
+     public void onClickBtn(View view) {
+       Intent i = new Intent(getApplicationContext(), Review.class);
+        startActivity(i);
 //        TextView status = (TextView) findViewById(R.id.dailyStatus);
 //        status.setText(R.string.appUsed);
 //        incrementDayCounter();
