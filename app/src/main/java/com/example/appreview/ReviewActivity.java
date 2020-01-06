@@ -11,9 +11,10 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class Review extends AppCompatActivity {
+public class ReviewActivity extends AppCompatActivity {
 
     boolean anxietyUpdated = false;
     boolean happinessUpdated = false;
@@ -23,6 +24,13 @@ public class Review extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(!UserData.getInstance().hasAppUsed()) {
+            setTitle(getString(R.string.title_activity_review_first));
+        } else {
+            setTitle(getString(R.string.title_activity_review_second));
+        }
+
         setContentView(R.layout.activity_review);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,6 +62,18 @@ public class Review extends AppCompatActivity {
                 }
             }
         };
+
+        TextView instructions = (TextView) findViewById(R.id.review_instructions);
+
+        if(!UserData.getInstance().hasAppUsed()){
+            instructions.setText(getString(R.string.review_description_pre));
+            b.setText(getString(R.string.review_submit_launch));
+        } else {
+            instructions.setText(getString(R.string.review_description_post));
+            b.setText(getString(R.string.submit));
+        }
+
+
         RatingBar anxietyRatingBar = findViewById(R.id.anxiety_slider);
         anxietyRatingBar.setOnRatingBarChangeListener(change);
         RatingBar happinessRatingBar = findViewById(R.id.happiness_slider);
@@ -68,16 +88,29 @@ public class Review extends AppCompatActivity {
     public void onSubmitData(View view) {
 //        Toast.makeText(this, "Launch app", Toast.LENGTH_SHORT).show();
 //        TextView status = (TextView) findViewById(R.id.dailyStatus);
-//        status.setText(R.string.appUsed);
+//        status.setText(R.string.hasAppUsed);
 //        incrementDayCounter();
         Context ctx = this;
 
-        try {
-            final String app = "com.android.chrome";
-            Intent i = ctx.getPackageManager().getLaunchIntentForPackage(app);
-            ctx.startActivity(i);
-        } catch (Exception e){
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        DailyData currentData = UserData.getInstance().getCurrentData();
+
+        if(!UserData.getInstance().hasAppUsed()){
+            currentData.setAnxietyLevelBefore(anxietyLevel);
+            currentData.setHappinessLevelBefore(happinessLevel);
+            try {
+                final String app = "com.android.chrome";
+                System.out.println("Launching");
+                Intent i = ctx.getPackageManager().getLaunchIntentForPackage(app);
+                ctx.startActivity(i);
+                System.out.println("Launched");
+            } catch (Exception e){
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            currentData.setAnxietyLevelAfter(anxietyLevel);
+            currentData.setHappinessLevelAfter(happinessLevel);
         }
+
+        finish();
     }
 }
