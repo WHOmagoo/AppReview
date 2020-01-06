@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Review"
+    tools:context=".ReviewActivity"
     tools:showIn="@layout/activity_review">
 
     <LinearLayout
@@ -22,7 +22,6 @@
             android:layout_margin="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="166dp"
-            android:text="@string/review_description"
             android:textSize="30sp" />
 
         <TextView
@@ -77,7 +76,7 @@
             android:layout_marginEnd="32sp"
             android:layout_marginBottom="32sp"
             android:onClick="onSubmitData"
-            android:text="@string/next" />
+            android:text="@string/review_submit_launch" />
 
     </LinearLayout>
 
