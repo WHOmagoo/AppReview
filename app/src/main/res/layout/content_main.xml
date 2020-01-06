@@ -9,11 +9,10 @@
     tools:showIn="@layout/activity_main">
 
     <TextView
+        android:id="@+id/dayCounterText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Day 12"
-        android:textSize="42dp"
-        android:id="@+id/dayCounterText"
+        android:textSize="42sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -21,11 +20,11 @@
         app:layout_constraintVertical_bias="0.16" />
 
     <TextView
+        android:id="@+id/dailyStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/appUnused"
-        android:textSize="22dp"
-        android:id="@+id/dailyStatus"
+        android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -33,11 +32,12 @@
         app:layout_constraintVertical_bias="0.3" />
 
     <Button
+        android:id="@+id/start_review_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start"
-        android:textSize="22dp"
         android:onClick="onClickBtn"
+        android:text="@string/start_review_button_enabled_text"
+        android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
