@@ -1,5 +1,6 @@
 package com.example.appreview;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,13 +10,15 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.Observable;
+import java.util.Observer;
 
-    private int dayCount = 0;
-    private boolean reviewedToday = true;
+public class MainActivity extends AppCompatActivity implements Observer {
+    private static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +26,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        incrementDayCounter();
-        setReviewedToday(false);
+
+        context = getApplicationContext();
+
+        updateView();
+        UserData.getInstance().addObserver(this);
     }
 
     @Override
@@ -42,18 +48,28 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.action_settings){
-            incrementDayCounter();
+
+            Toast.makeText(super.getApplicationContext(), "Settings have not been implemented", Toast.LENGTH_SHORT).show();
+
             return true;
         }
 
         if(id == R.id.action_increment_day){
-            incrementDayCounter();
+            UserData.getInstance().nextDay();
             return true;
         }
 
 
-        if(id == R.id.action_spoof_review){
-            setReviewedToday(true);
+        if(id == R.id.action_spoof_review_first){
+            DailyData d = UserData.getInstance().getCurrentData();
+            d.setAnxietyLevelBefore((int) (Math.random() * 11));
+            d.setHappinessLevelBefore((int) (Math.random() * 11));
+        }
+
+        if(id == R.id.action_spoof_review_second){
+            DailyData d = UserData.getInstance().getCurrentData();
+            d.setAnxietyLevelAfter((int) (Math.random() * 11));
+            d.setHappinessLevelAfter((int) (Math.random() * 11));
         }
 
         //noinspection SimplifiableIfStatement
@@ -64,32 +80,61 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setReviewedToday(boolean b){
-        if(b != reviewedToday){
-            TextView reviewSplash = (TextView) findViewById(R.id.dailyStatus);
-            if(b){
-                reviewSplash.setText(getResources().getString(R.string.appUsed));
-            } else {
-                reviewSplash.setText(getResources().getString(R.string.appUnused));
-            }
+    public static Context getAppContext() {
+        return context;
+    }
 
-            reviewedToday = b;
+    private void setReviewedToday(boolean b){
+        TextView reviewSplash = (TextView) findViewById(R.id.dailyStatus);
+        if(b){
+            reviewSplash.setText(getResources().getString(R.string.appUsed));
+        } else {
+            reviewSplash.setText(getResources().getString(R.string.appUnused));
         }
     }
 
-    private void incrementDayCounter(){
+    private void setDayFinished(boolean b){
+        if(b){
+            TextView reviewSplash = (TextView) findViewById(R.id.dailyStatus);
+            reviewSplash.setText(getResources().getString(R.string.statusDone));
+        } else {
+            //Reset the text box if going from finished to non finished
+        }
+    }
+
+    private void updateDayCounter(){
         TextView dayText = (TextView) findViewById(R.id.dayCounterText);
-        dayCount++;
-        String newText = String.format(getResources().getString(R.string.day), dayCount);
+        String newText = String.format(getResources().getString(R.string.day), UserData.getInstance().getCurDay());
         dayText.setText(newText);
         setReviewedToday(false);
     }
 
-     public void onClickBtn(View view) {
-       Intent i = new Intent(getApplicationContext(), Review.class);
+    public void onClickBtn(View view) {
+        Intent i = new Intent(getApplicationContext(), ReviewActivity.class);
         startActivity(i);
 //        TextView status = (TextView) findViewById(R.id.dailyStatus);
-//        status.setText(R.string.appUsed);
-//        incrementDayCounter();
+//        status.setText(R.string.hasAppUsed);
+//        updateDayCounter();
+    }
+
+    private void updateView(){
+        updateDayCounter();
+        setReviewedToday(UserData.getInstance().hasAppUsed());
+        setDayFinished(UserData.getInstance().hasTaskFinished());
+
+        Button submit = (Button) findViewById(R.id.start_review_button);
+
+        if(UserData.getInstance().hasTaskFinished()){
+            submit.setEnabled(false);
+            submit.setText(getString(R.string.start_review_button_disabled_text));
+        } else {
+            submit.setEnabled(true);
+            submit.setText(getString(R.string.start_review_button_enabled_text));
+        }
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        updateView();
     }
 }
