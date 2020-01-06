@@ -5,10 +5,17 @@
     <string name="appUsed">App used today</string>
     <string name="day">Day %1$d</string>
     <string name="action_increment_day">Next Day</string>
-    <string name="action_spoof_review">Spoof Review</string>
-    <string name="title_activity_review">Review</string>
-    <string name="review_description"> Rate your current levels</string>
+    <string name="action_spoof_review_first">Spoof First Review</string>
+    <string name="title_activity_review_first">First Review</string>
+    <string name="title_activity_review_second">Second Review</string>
+    <string name="review_description_pre"> Rate your levels before using the app</string>
+    <string name="review_description_post"> Rate your levels after using the app</string>
     <string name="label_anxiety">Anxiety level</string>
     <string name="label_happiness">Happiness level</string>
-    <string name="next">Launch App →</string>
+    <string name="review_submit_launch">Launch App →</string>
+    <string name="submit">Submit</string>
+    <string name="statusDone">App review completed today</string>
+    <string name="action_spoof_review_second">Spoof second review</string>
+    <string name="start_review_button_enabled_text">Start</string>
+    <string name="start_review_button_disabled_text">Finished</string>
 </resources>
