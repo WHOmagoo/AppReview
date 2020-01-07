@@ -19,4 +19,10 @@
     <string name="start_review_button_enabled_text">Start</string>
     <string name="start_review_button_disabled_text">Finished</string>
     <string name="action_export_csv">Export as CSV</string>
+    <string name="first_review_icon_description">First Review Icon</string>
+    <string name="second_review_icon_description">Second review icon status</string>
+    <string name="app_used_icon_description">App used today status</string>
+    <string name="progress_bar_description">Today\'s progress</string>
+    <string name="copy_data">Copy Data</string>
+    <string name="action_send_push_notification">Send push notification</string>
 </resources>
