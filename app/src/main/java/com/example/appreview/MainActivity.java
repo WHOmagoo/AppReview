@@ -120,8 +120,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
         int id = item.getItemId();
 
         if(id == R.id.action_settings){
-
-            Toast.makeText(super.getApplicationContext(), "Settings have not been implemented", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(i);
 
             return true;
         } else if(id == R.id.action_increment_day){
