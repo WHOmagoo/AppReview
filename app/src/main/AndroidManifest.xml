@@ -32,11 +32,18 @@
                 android:resource="@xml/provider_paths" />
 
         </provider>
-        <receiver android:name=".SampleBootReceiver"
+        <receiver android:name=".SendNotificationReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>
+        </receiver>
+        <receiver android:name=".OnBootReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+            </intent-filter>
+
         </receiver>
     </application>
 </manifest>
