@@ -98,11 +98,14 @@ public class ReviewActivity extends AppCompatActivity {
             currentData.setAnxietyLevelBefore(anxietyLevel);
             currentData.setHappinessLevelBefore(happinessLevel);
             try {
-                final String app = "com.android.chrome";
-                System.out.println("Launching");
+//                final String app = "com.android.chrome";
+                final String app = "com.YourCompany.aVRPlace";
                 Intent i = ctx.getPackageManager().getLaunchIntentForPackage(app);
-                ctx.startActivity(i);
-                System.out.println("Launched");
+                if(i == null){
+                    Toast.makeText(this, "Error: Could not find app " + app, Toast.LENGTH_LONG).show();
+                } else {
+                    ctx.startActivity(i);
+                }
             } catch (Exception e){
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
