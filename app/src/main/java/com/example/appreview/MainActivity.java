@@ -64,21 +64,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             editor.apply();
         }
 
-        AlarmManager alarmMgr;
-        PendingIntent alarmIntent;
-
-        alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, SampleBootReceiver.class);
-        alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-
-        //TODO reenable inexact repetition for alarm after testing
-        alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() +
-                        30 * 1000,60000, alarmIntent);
-
-//        alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//                SystemClock.elapsedRealtime() +
-//                        30 * 1000,30 * 1000, alarmIntent);
+        DailyNotification dn = new DailyNotification(context, 0);
 
     }
 
