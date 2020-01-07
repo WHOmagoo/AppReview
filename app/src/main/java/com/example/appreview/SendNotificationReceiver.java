@@ -19,7 +19,7 @@ import java.util.Calendar;
 import static com.example.appreview.MainActivity.CHANNEL_ID;
 import static com.example.appreview.MainActivity.NOTIFICATION_ID;
 
-public class SampleBootReceiver extends BroadcastReceiver {
+public class SendNotificationReceiver extends BroadcastReceiver {
 
     private void createNotificationChannel(Context context) {
         // Create the NotificationChannel, but only on API 26+ because
@@ -54,26 +54,6 @@ public class SampleBootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("Boot Recieve", "Recieved command from alarm");
         sendPushNotification(context);
-//        if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-//            AlarmManager alarmMgr;
-//            PendingIntent alarmIntent;
-//            alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-//            intent = new Intent(context, MyReceiver.class);
-//            alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-//
-//
-//            // Set the alarm to start at approximately 8:00 p.m.
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.setTimeInMillis(System.currentTimeMillis());
-//            calendar.set(Calendar.HOUR_OF_DAY, 20);
-//
-//            // With setInexactRepeating(), you have to use one of the AlarmManager interval
-//            // constants--in this case, AlarmManager.INTERVAL_DAY.
-//            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-//                    AlarmManager.INTERVAL_DAY, alarmIntent);
-//
-//        }
     }
 }
