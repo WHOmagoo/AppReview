@@ -17,6 +17,12 @@
     app:showAsAction="never"/>
 
     <item
+        android:id="@+id/copy_data"
+        android:orderInCategory="5"
+        android:title="@string/copy_data"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/action_spoof_review_first"
         android:orderInCategory="100"
         android:title="@string/action_spoof_review_first"
@@ -27,8 +33,14 @@
         android:title="@string/action_spoof_review_second"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/action_export_csv"
+        android:id="@+id/action_share"
+        android:icon="@drawable/share_button_foreground"
         android:orderInCategory="100"
         android:title="@string/action_export_csv"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/action_send_push_notification"
+        android:orderInCategory="300"
+        android:title="@string/action_send_push_notification"
+        app:showAsAction="never"/>
 </menu>
