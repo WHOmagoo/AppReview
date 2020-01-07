@@ -113,7 +113,7 @@ public class UserData extends Observable implements Observer {
         for (int i = 0; i < data.size(); i++) {
             sb.append(identifier);
             sb.append(",");
-            sb.append(curData.makeCSV());
+            sb.append(data.get(i).makeCSV());
             sb.append("\n");
         }
 
@@ -173,10 +173,5 @@ public class UserData extends Observable implements Observer {
             setChanged();
             notifyObservers();
         }
-    }
-
-    @Override
-    public void notifyObservers(){
-        super.notifyObservers();
     }
 }
