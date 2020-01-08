@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         return true;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -164,31 +165,17 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
                 System.out.println(csvPath);
                 Uri contentUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", csvPath);
-
-//                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-//                intent.addCategory(Intent.CATEGORY_OPENABLE);
-//                intent.setType("application/txt");
-//                intent.putExtra(Intent.EXTRA_TITLE, "userData.csv");
-//
-//                // Optionally, specify a URI for the directory that should be opened in
-//                // the system file picker when your app creates the document.
-//                intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, contentUri);
-//
-//                startActivityForResult(intent, 0);
-
-
-//                Uri uri = Uri.fromFile(context.getFileStreamPath("userData.csv"));
-
+//                Intent sharingIntent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setDataAndType(contentUri, "text/plain");
                 sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-//                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "CSV Data!");
-//                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Extra text");
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.default_subject_line));
+                sharingIntent.putExtra(Intent.ACTION_SENDTO, getString(R.string.default_email_recipient));
+                sharingIntent.setType("text/plain");
                 startActivity(Intent.createChooser(sharingIntent, "Share CSV file via"));
             }catch (IOException e) {
-                    e.printStackTrace();
-                }
+                e.printStackTrace();
+            }
         } else if (id == R.id.copy_data){
             ClipboardManager myClipboard;
             myClipboard = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
