@@ -25,4 +25,11 @@
     <string name="progress_bar_description">Today\'s progress</string>
     <string name="copy_data">Copy Data</string>
     <string name="action_send_push_notification">Send push notification</string>
+    <string name="name">Name</string>
+    <string name="daily_reminder_time_text">Daily Reminder Time</string>
+    <string name="time_hint">hh:mm</string>
+    <string name="app_usage_length_text">App Usage Length</string>
+    <string name="notification_snooze_time_text">Notification Snooze Length</string>
+    <string name="automatic_recurring_notifications_text">Automatic Recurring Notifications</string>
+    <string name="save_text">Save</string>
 </resources>
