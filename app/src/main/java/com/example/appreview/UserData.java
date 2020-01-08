@@ -30,7 +30,7 @@ public class UserData extends Observable implements Observer {
 
         boolean created = false;
 
-        userDataSaved = context.getSharedPreferences("data", 0);
+        userDataSaved = context.getSharedPreferences("data", Context.MODE_PRIVATE);
         int count = userDataSaved.getInt("count", 0);
 
         identifier = userDataSaved.getString("id", "J Doe");
