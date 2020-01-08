@@ -32,4 +32,6 @@
     <string name="notification_snooze_time_text">Notification Snooze Length</string>
     <string name="automatic_recurring_notifications_text">Automatic Recurring Notifications</string>
     <string name="save_text">Save</string>
+    <string name="default_subject_line" >My CSV data</string>
+    <string name="default_email_recipient"></string>
 </resources>
