@@ -16,7 +16,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class UserData extends Observable implements Observer {
-    private static final UserData ourInstance = new UserData(MainActivity.getAppContext());
+    private static final UserData ourInstance = new UserData();
     private int curDay;
 
     private ArrayList<DailyData> data;
@@ -30,7 +30,12 @@ public class UserData extends Observable implements Observer {
         return ourInstance;
     }
 
-    private UserData(Context context) {
+    private UserData() {
+        try {
+            context = MainActivity.getAppContext();
+        } catch (Exception e){
+            ReviewActivity.getAppContext();
+        }
         data = new ArrayList<DailyData>();
 
         boolean created = false;

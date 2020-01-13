@@ -26,10 +26,18 @@ public class ReviewActivity extends AppCompatActivity {
     boolean happinessUpdated = false;
     int anxietyLevel = 0;
     int happinessLevel = 0;
+    private static Context context;
+
+
+    public static Context getAppContext() {
+        return context;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        context = getAppContext();
 
         if(!UserData.getInstance().hasAppUsed()) {
             setTitle(getString(R.string.title_activity_review_first));

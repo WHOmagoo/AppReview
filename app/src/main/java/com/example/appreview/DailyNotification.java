@@ -22,19 +22,6 @@ public class DailyNotification {
         if (reminderTime != -1) {
             assert alarmMgr != null;
             alarmMgr.cancel(alarmIntent);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(System.currentTimeMillis());
-
-            if(calendar.get(Calendar.HOUR_OF_DAY) * 1000 * 60 + calendar.get(Calendar.MINUTE) * 1000 < reminderTime){
-                calendar.setTimeInMillis(calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(1));
-            }
-            int hour = (int) (reminderTime / (1000 * 60));
-            calendar.set(Calendar.HOUR_OF_DAY, hour);
-            calendar.set(Calendar.MINUTE, (int) ((reminderTime - hour) / (1000)));
-            calendar.set(Calendar.SECOND, 0);
-
-
             alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
                     Calendar.getInstance().getTimeInMillis() + reminderTime, AlarmManager.INTERVAL_DAY, alarmIntent);
         }
