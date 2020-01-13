@@ -5,10 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.SystemClock;
-
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 import static com.example.appreview.Defaults.convertTimeToLong;
 
@@ -22,7 +19,14 @@ public class DailyNotification {
         if (reminderTime != -1) {
             assert alarmMgr != null;
             alarmMgr.cancel(alarmIntent);
-            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, reminderTime, AlarmManager.INTERVAL_DAY, alarmIntent);
+
+            Calendar cur = Calendar.getInstance();
+
+            int remindHour = (int) (reminderTime / (1000*60));
+            cur.set(Calendar.HOUR_OF_DAY, remindHour);
+            cur.set(Calendar.MINUTE, (int) ((reminderTime - remindHour) / 1000));
+
+            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cur.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
         }
     }
 
