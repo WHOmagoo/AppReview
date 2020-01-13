@@ -8,8 +8,7 @@ import java.util.regex.Pattern;
 class Defaults {
     static final String DEFAULT_REMINDER_TIME = "18:00";
     static final String DEFAULT_APP_USAGE_LENGTH = "00:15";
-    static final String DEFAULT_SNOOZE_LENGTH = "00:02";
-//    static final String DEFAULT_SNOOZE_LENGTH = "01:00";
+    static final String DEFAULT_SNOOZE_LENGTH = "01:00";
     static final String REGEX_STRING_WITH_COLON = "^(0?\\d|1\\d|2[0-3])?:([0-5]?\\d)$";
     static final String REGEX_STRING_WITHOUT_COLON = "^(0\\d|1\\d|2[0-3])?([0-5]\\d|^\\d)$";
     static final String REGEX_STRING_NON_ZERO = ".*[1-9].*";

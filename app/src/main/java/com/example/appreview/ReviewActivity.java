@@ -128,7 +128,7 @@ public class ReviewActivity extends AppCompatActivity {
                 long timeToWait = Defaults.convertTimeToLong(sTimeToWait);
 
                 if (alarmManager != null) {
-                    alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, intent);
+                    alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToWait, intent);
                 } else {
                     Log.d("Review Activity", "Could not queue app usage reminder");
                 }
@@ -151,6 +151,7 @@ public class ReviewActivity extends AppCompatActivity {
                 }
             } catch (Exception e){
                 Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                finish();
             }
         } else {
             currentData.setAnxietyLevelAfter(anxietyLevel);
