@@ -45,6 +45,9 @@
             android:name=".SendNotificationReceiver"
             android:enabled="true">
         </receiver>
+        <receiver android:name=".NotificationSnoozer"
+            android:enabled="true">
+        </receiver>
         <receiver
             android:name=".OnBootReceiver"
             android:enabled="true">

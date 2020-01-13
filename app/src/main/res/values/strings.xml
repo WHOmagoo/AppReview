@@ -34,4 +34,5 @@
     <string name="save_text">Save</string>
     <string name="default_subject_line" >My CSV data</string>
     <string name="default_email_recipient"></string>
+    <string name="snooze">Snooze</string>
 </resources>

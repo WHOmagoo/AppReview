@@ -1,13 +1,19 @@
 package com.example.appreview;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
@@ -78,7 +84,16 @@ public class ReviewActivity extends AppCompatActivity {
         anxietyRatingBar.setOnRatingBarChangeListener(change);
         RatingBar happinessRatingBar = findViewById(R.id.happiness_slider);
         happinessRatingBar.setOnRatingBarChangeListener(change);
+
+        UserData.getInstance().updateDay();
     }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        UserData.getInstance().updateDay();
+    }
+
 
     private void enableButton(){
         Button b = findViewById(R.id.submit_ratings);
@@ -97,12 +112,40 @@ public class ReviewActivity extends AppCompatActivity {
         if(!UserData.getInstance().hasAppUsed()){
             currentData.setAnxietyLevelBefore(anxietyLevel);
             currentData.setHappinessLevelBefore(happinessLevel);
+
+            SharedPreferences preferences = getSharedPreferences("settings", MODE_PRIVATE);
+            if(preferences.getBoolean("appUsageLengthEnabled", true)){
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+                Intent notification = new Intent(getApplicationContext(), SendNotificationReceiver.class);
+                notification.putExtra("type", Defaults.APP_USAGE_REMINDER);
+                notification.putExtra("title", "Don't forget your second review");
+                notification.putExtra("id", 55);
+
+                PendingIntent intent = PendingIntent.getBroadcast(this, Defaults.APP_USAGE_REMINDER, notification, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                String sTimeToWait = preferences.getString("appUsageLength", Defaults.DEFAULT_APP_USAGE_LENGTH);
+                long timeToWait = Defaults.convertTimeToLong(sTimeToWait);
+
+                if (alarmManager != null) {
+                    alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, intent);
+                } else {
+                    Log.d("Review Activity", "Could not queue app usage reminder");
+                }
+            }
+
+
             try {
-//                final String app = "com.android.chrome";
-                final String app = "com.YourCompany.aVRPlace";
-                Intent i = ctx.getPackageManager().getLaunchIntentForPackage(app);
+                final String app1 = "com.CedVR.aVRPlaceX";
+                final String app2 = "com.CedVR.aVRPlaceY";
+
+                Intent i = ctx.getPackageManager().getLaunchIntentForPackage(app1);
+                if(i == null) {
+                    i = ctx.getPackageManager().getLaunchIntentForPackage(app2);
+                }
+
                 if(i == null){
-                    Toast.makeText(this, "Error: Could not find app " + app, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Error: Could not find app " + app1 + " or " + app2, Toast.LENGTH_LONG).show();
                 } else {
                     ctx.startActivity(i);
                 }

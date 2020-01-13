@@ -35,6 +35,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
@@ -64,45 +66,24 @@ public class MainActivity extends AppCompatActivity implements Observer {
             editor.apply();
         }
 
-        DailyNotification dn = new DailyNotification(context, 0);
+        UserData.getInstance().updateDay();
+        DailyNotification.updateDailyNotification(getApplicationContext());
 
-    }
 
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Daily Reminder";
-            String description = "This channel will go off once daily";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    public void sendPushNotification(){
-        createNotificationChannel();
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
-        builder.setContentTitle("Don't forget to review the app today!");
-        builder.setSmallIcon(R.drawable.review_icon_foreground);
-        builder.setPriority(Notification.PRIORITY_DEFAULT);
-        Intent notifyIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        //to be able to launch your activity from the notification
-        builder.setContentIntent(pendingIntent);
-
-        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-        managerCompat.notify(NOTIFICATION_ID, builder.build());
     }
 
     @Override
     public void onStart(){
         super.onStart();
-        updateView();
+        SharedPreferences prefs = context.getSharedPreferences("settings", MODE_PRIVATE);
+        if(prefs.getBoolean("firstSetup", true)) {
+            Intent i = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(i);
+
+        } else {
+            updateView();
+            UserData.getInstance().updateDay();
+        }
     }
 
     @Override
@@ -125,17 +106,17 @@ public class MainActivity extends AppCompatActivity implements Observer {
             startActivity(i);
 
             return true;
-        } else if(id == R.id.action_increment_day){
-            UserData.getInstance().nextDay();
-            return true;
-        } else if(id == R.id.action_spoof_review_first){
-            DailyData d = UserData.getInstance().getCurrentData();
-            d.setAnxietyLevelBefore((int) (Math.random() * 11));
-            d.setHappinessLevelBefore((int) (Math.random() * 11));
-        } else if(id == R.id.action_spoof_review_second){
-            DailyData d = UserData.getInstance().getCurrentData();
-            d.setAnxietyLevelAfter((int) (Math.random() * 11));
-            d.setHappinessLevelAfter((int) (Math.random() * 11));
+//        } else if(id == R.id.action_increment_day){
+//            UserData.getInstance().nextDay();
+//            return true;
+//        } else if(id == R.id.action_spoof_review_first){
+//            DailyData d = UserData.getInstance().getCurrentData();
+//            d.setAnxietyLevelBefore((int) (Math.random() * 11));
+//            d.setHappinessLevelBefore((int) (Math.random() * 11));
+//        } else if(id == R.id.action_spoof_review_second){
+//            DailyData d = UserData.getInstance().getCurrentData();
+//            d.setAnxietyLevelAfter((int) (Math.random() * 11));
+//            d.setHappinessLevelAfter((int) (Math.random() * 11));
         } else if(id == R.id.action_share){
             String generatedCSVData = UserData.getInstance().makeCSV();
 
@@ -183,15 +164,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
             ClipData csvClipData = ClipData.newPlainText("text", csvString);
             assert myClipboard != null;
             myClipboard.setPrimaryClip(csvClipData);
-        } else if (id == R.id.action_send_push_notification){
-            sendPushNotification();
+//        } else if (id == R.id.action_send_push_notification){
+////            sendPushNotification();
+//            SendNotificationReceiver r = new SendNotificationReceiver();
+//            r.sendPushNotification(this, "Don't forget to review the app today", null, id, 1);
         }
 
-        //noinspection SimplifiableIfStatement
-//
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
         return super.onOptionsItemSelected(item);
     }
 

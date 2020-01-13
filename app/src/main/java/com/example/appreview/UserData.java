@@ -3,6 +3,10 @@ package com.example.appreview;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,8 +22,9 @@ public class UserData extends Observable implements Observer {
     private ArrayList<DailyData> data;
     private DailyData curData;
     private String identifier;
+    private Date startingDate;
 
-    SharedPreferences userDataSaved;
+    Context context;
 
     public static UserData getInstance() {
         return ourInstance;
@@ -30,14 +35,35 @@ public class UserData extends Observable implements Observer {
 
         boolean created = false;
 
-        userDataSaved = context.getSharedPreferences("data", Context.MODE_PRIVATE);
+        this.context = context;
+
+        SharedPreferences userDataSaved = context.getSharedPreferences("data", Context.MODE_PRIVATE);
         int count = userDataSaved.getInt("count", 0);
 
         identifier = userDataSaved.getString("id", "J Doe");
 
+        String startingDateString = userDataSaved.getString("startingDate", null);
+        if (startingDateString == null){
+            startingDate = Calendar.getInstance().getTime();
+            startingDateString = DailyData.dateFormat.format(startingDate);
+            SharedPreferences.Editor editor = userDataSaved.edit();
+            editor.putString("startingDate", startingDateString);
+            editor.apply();
+        } else {
+            try {
+                startingDate = DailyData.dateFormat.parse(startingDateString);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(startingDate);
 
         for(int i = 1; i <= count; i++){
-            String curDayData = userDataSaved.getString("day" + i, "20/01/01,"+ i + ",,,,");
+
+            c.add(Calendar.DAY_OF_MONTH, 1);
+            String curDayData = userDataSaved.getString("day" + i, DailyData.dateFormat.format(c.getTime()) + "," + i + ",,,,");
             curData = DailyData.makeDailyDataFromCSV(curDayData);
             data.add(curData);
         }
@@ -80,6 +106,14 @@ public class UserData extends Observable implements Observer {
         return curData;
     }
 
+    public void updateDay(){
+        Date curDate = Calendar.getInstance().getTime();
+
+        for(long i = TimeUnit.DAYS.convert(startingDate.getTime() - curDate.getTime(), TimeUnit.MILLISECONDS) - curDay; i > 0; i--){
+            nextDay();
+        }
+    }
+
     public DailyData nextDay(){
         if(curData != null){
             curData.deleteObserver(this);
@@ -91,9 +125,6 @@ public class UserData extends Observable implements Observer {
         curData = todaysData;
 
         curData.addObserver(this);
-
-        setChanged();
-        notifyObservers();
 
         writeDay();
 
@@ -149,6 +180,26 @@ public class UserData extends Observable implements Observer {
         }
     }
 
+    public static boolean dayValid(Context context){
+        SharedPreferences data = context.getSharedPreferences("data", Context.MODE_PRIVATE);
+        String startingDate = data.getString("startingDate", null);
+
+        if(startingDate == null){
+            return true;
+        }
+
+        Date curDate = Calendar.getInstance().getTime();
+        Date startDate;
+        try {
+            startDate = DailyData.dateFormat.parse(startingDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return true;
+        }
+
+        return TimeUnit.DAYS.convert(curDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS) == data.getInt("count", -1);
+    }
+
     public boolean hasAppUsed() {
         return curData.appUsed();
     }
@@ -158,10 +209,13 @@ public class UserData extends Observable implements Observer {
     }
 
     private void writeDay(){
+        SharedPreferences userDataSaved = context.getSharedPreferences("data", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = userDataSaved.edit();
 
         editor.putString("day" + curDay, curData.makeCSV());
         editor.putInt("count", curDay);
+        editor.putBoolean("ReviewedToday", curData.appUsed());
+        editor.putBoolean("DayFinished", curData.taskFinished());
         editor.apply();
     }
 

@@ -4,28 +4,47 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.SystemClock;
 
-public class DailyNotification {
-    private AlarmManager alarmMgr;
-    private PendingIntent alarmIntent;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
-    public DailyNotification(Context context, long reminderTime){
-        alarmMgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+import static com.example.appreview.Defaults.convertTimeToLong;
+
+public class DailyNotification {
+    private static void updateDailyNotification(Context context, long reminderTime){
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, SendNotificationReceiver.class);
-        alarmIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-        setReminderTime(reminderTime);
-//        alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-//                SystemClock.elapsedRealtime() +
-//                        30 * 1000,30 * 1000, alarmIntent);
+        intent.putExtra("type", 1);
+        intent.putExtra("title", "Don't forget to review the app today!");
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Defaults.DAILY_NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (reminderTime != -1) {
+            assert alarmMgr != null;
+            alarmMgr.cancel(alarmIntent);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(System.currentTimeMillis());
+
+            if(calendar.get(Calendar.HOUR_OF_DAY) * 1000 * 60 + calendar.get(Calendar.MINUTE) * 1000 < reminderTime){
+                calendar.setTimeInMillis(calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(1));
+            }
+            int hour = (int) (reminderTime / (1000 * 60));
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, (int) ((reminderTime - hour) / (1000)));
+            calendar.set(Calendar.SECOND, 0);
+
+
+            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                    Calendar.getInstance().getTimeInMillis() + reminderTime, AlarmManager.INTERVAL_DAY, alarmIntent);
+        }
     }
 
-    public void setReminderTime(long reminderTime){
-        //TODO set interval to 24 hours and not on minute
-//        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, reminderTime, 60000, alarmIntent);
-        alarmMgr.cancel(alarmIntent);
-        alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime() +
-                        30 * 1000,30 * 1000, alarmIntent);
+    public static void updateDailyNotification(Context context){
+        SharedPreferences preferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        String reminderTime = preferences.getString("reminderTime", Defaults.DEFAULT_REMINDER_TIME);
+        boolean dailyReminderEnabled = preferences.getBoolean("dailyReminderEnabled", true);
+        long lReminderTime = dailyReminderEnabled ? convertTimeToLong(reminderTime) : -1;
+        DailyNotification.updateDailyNotification(context, lReminderTime);
     }
 }

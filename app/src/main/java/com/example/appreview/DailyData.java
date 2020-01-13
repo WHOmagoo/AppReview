@@ -22,7 +22,7 @@ public class DailyData extends Observable {
 
     private Date date;
     private int dayNum;
-    private static DateFormat dateFormat = new SimpleDateFormat("yy/MM/dd");
+    public static DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
     public DailyData(Date date, int dayNum){
         this.date = date;

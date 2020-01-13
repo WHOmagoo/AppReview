@@ -1,6 +1,5 @@
 package com.example.appreview;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -8,13 +7,11 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
-import java.util.Calendar;
 
 import static com.example.appreview.MainActivity.CHANNEL_ID;
 import static com.example.appreview.MainActivity.NOTIFICATION_ID;
@@ -33,27 +30,69 @@ public class SendNotificationReceiver extends BroadcastReceiver {
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            assert notificationManager != null;
             notificationManager.createNotificationChannel(channel);
         }
     }
 
-    public void sendPushNotification(Context context){
+    public void sendPushNotification(Context context, Intent intent){
+        sendPushNotification(context, intent.getStringExtra("title"), intent.getStringExtra("description"), intent.getIntExtra("id", 0), intent.getIntExtra("type", -1));
+    }
+
+    public void sendPushNotification(Context context, String title, String description, int id, int type){
+        //TODO add snooze button to notification
         createNotificationChannel(context);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
-        builder.setContentTitle("Don't forget to review the app today!");
+        builder.setContentTitle(title);
+        builder.setContentText(description);
         builder.setSmallIcon(R.drawable.review_icon_foreground);
         builder.setPriority(Notification.PRIORITY_DEFAULT);
-        Intent notifyIntent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent notifyIntent = new Intent(context, ReviewActivity.class);
+        notifyIntent.putExtra("id", id);
+
+        SharedPreferences settings = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+
+        Intent snoozeIntent = new Intent(context, NotificationSnoozer.class);
+        snoozeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        snoozeIntent.putExtra("title", title);
+        snoozeIntent.putExtra("description", description);
+        snoozeIntent.putExtra("id", id);
+        snoozeIntent.putExtra("type", type);
+        PendingIntent snoozeAlarmIntent = PendingIntent.getBroadcast(context,Defaults.SNOOZED_NOTIFICATION_ID, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if(settings.getBoolean("notificationSnoozeEnabled", true)) {
+            builder.addAction(R.drawable.snooze_button_foreground, context.getString(R.string.snooze), snoozeAlarmIntent);
+        }
+
+        if(settings.getBoolean("recurringNotificationsEnabled", true)){
+            NotificationSnoozer.snoozeNotification(context, snoozeIntent, false);
+        }
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, Defaults.CLICKED_NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         //to be able to launch your activity from the notification
         builder.setContentIntent(pendingIntent);
 
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
-        managerCompat.notify(NOTIFICATION_ID, builder.build());
+        managerCompat.notify(id, builder.build());
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        sendPushNotification(context);
+        SharedPreferences data = context.getSharedPreferences("date", Context.MODE_PRIVATE);
+        switch (intent.getIntExtra("type", -1)){
+            case 1:
+                if(!UserData.dayValid(context) || !data.getBoolean("ReviewedToday", false)){
+                    sendPushNotification(context, intent);
+                }
+                break;
+            case 2:
+                if(!UserData.dayValid(context) || !data.getBoolean("DayFinished", false)){
+                    sendPushNotification(context, intent);
+                }
+                break;
+            default:
+                sendPushNotification(context, intent);
+        }
     }
 }
