@@ -55,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         context = getApplicationContext();
 
+        UserData.getInstance().updateDay();
+        DailyNotification.updateDailyNotification(getApplicationContext());
+
+
         updateView();
         UserData.getInstance().addObserver(this);
         SharedPreferences preferences = context.getSharedPreferences("settings", 0);
@@ -65,11 +69,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
             editor.putBoolean("storageMade", result);
             editor.apply();
         }
-
-        UserData.getInstance().updateDay();
-        DailyNotification.updateDailyNotification(getApplicationContext());
-
-
     }
 
     @Override
@@ -81,8 +80,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
             startActivity(i);
 
         } else {
-            updateView();
             UserData.getInstance().updateDay();
+            updateView();
         }
     }
 

@@ -22,8 +22,7 @@ public class DailyNotification {
         if (reminderTime != -1) {
             assert alarmMgr != null;
             alarmMgr.cancel(alarmIntent);
-            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                    Calendar.getInstance().getTimeInMillis() + reminderTime, AlarmManager.INTERVAL_DAY, alarmIntent);
+            alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, reminderTime, AlarmManager.INTERVAL_DAY, alarmIntent);
         }
     }
 

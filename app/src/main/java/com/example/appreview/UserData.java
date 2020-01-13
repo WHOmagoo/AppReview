@@ -114,7 +114,8 @@ public class UserData extends Observable implements Observer {
     public void updateDay(){
         Date curDate = Calendar.getInstance().getTime();
 
-        for(long i = TimeUnit.DAYS.convert(startingDate.getTime() - curDate.getTime(), TimeUnit.MILLISECONDS) - curDay; i > 0; i--){
+        long daysBetween = TimeUnit.DAYS.convert(curDate.getTime() - startingDate.getTime(), TimeUnit.MILLISECONDS);
+        for(long i = daysBetween - curDay + 1; i > 0; i--){
             nextDay();
         }
     }
