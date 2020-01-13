@@ -40,7 +40,6 @@ public class SendNotificationReceiver extends BroadcastReceiver {
     }
 
     public void sendPushNotification(Context context, String title, String description, int id, int type){
-        //TODO add snooze button to notification
         createNotificationChannel(context);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
         builder.setContentTitle(title);
