@@ -342,7 +342,9 @@ public class SettingsActivity extends AppCompatActivity {
 //        reminderTimeInput.setImeOptions(EditorInfo.IME_ACTION_DONE);
         if(firstSetup){
             Button cancel = findViewById(R.id.cancelButton);
-            ((ViewGroup) cancel.getParent()).removeView(cancel);
+            if(cancel != null) {
+                ((ViewGroup) cancel.getParent()).removeView(cancel);
+            }
             Toolbar toolbar = findViewById(R.id.toolbar);
             toolbar.setTitle("Settings - First time setup");
             setSupportActionBar(toolbar);
