@@ -71,6 +71,7 @@ public class SendNotificationReceiver extends BroadcastReceiver {
 
         //to be able to launch your activity from the notification
         builder.setContentIntent(pendingIntent);
+        builder.setAutoCancel(true);
 
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
         managerCompat.notify(id, builder.build());
