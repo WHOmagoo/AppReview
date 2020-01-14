@@ -79,6 +79,7 @@ public class SendNotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         SharedPreferences data = context.getSharedPreferences("data", Context.MODE_PRIVATE);
+        UserData.getInstance().updateDay();
         switch (intent.getIntExtra("type", -1)){
             case Defaults.DAILY_NOTIFICATION_ID:
                 if(!UserData.dayValid(context) || !data.getBoolean("ReviewedToday", false)){
