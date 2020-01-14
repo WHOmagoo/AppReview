@@ -52,6 +52,22 @@ public class SettingsActivity extends AppCompatActivity {
 
         cur = (EditText) findViewById(R.id.nameInput);
         cur.setOnEditorActionListener(new EditorActionListener());
+        cur.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                name = s.toString();
+            }
+        });
 
         cur = (EditText) findViewById(R.id.NotificationSnoozeLengthTimeInput);
         cur.addTextChangedListener(new TextChangeListener(cur, false));
