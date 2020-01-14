@@ -1,19 +1,13 @@
 package com.example.appreview;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
 
-import android.os.SystemClock;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
@@ -121,26 +115,7 @@ public class ReviewActivity extends AppCompatActivity {
             currentData.setAnxietyLevelBefore(anxietyLevel);
             currentData.setHappinessLevelBefore(happinessLevel);
 
-            SharedPreferences preferences = getSharedPreferences("settings", MODE_PRIVATE);
-            if(preferences.getBoolean("appUsageLengthEnabled", true)){
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-                Intent notification = new Intent(getApplicationContext(), SendNotificationReceiver.class);
-                notification.putExtra("type", Defaults.APP_USAGE_REMINDER);
-                notification.putExtra("title", "Don't forget your second review");
-                notification.putExtra("id", 55);
-
-                PendingIntent intent = PendingIntent.getBroadcast(this, Defaults.APP_USAGE_REMINDER, notification, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                String sTimeToWait = preferences.getString("appUsageLength", Defaults.DEFAULT_APP_USAGE_LENGTH);
-                long timeToWait = Defaults.convertTimeToLong(sTimeToWait);
-
-                if (alarmManager != null) {
-                    alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToWait, intent);
-                } else {
-                    Log.d("Review Activity", "Could not queue app usage reminder");
-                }
-            }
+            NotificationSnoozer.ScheduleSecondReviewPushNotification(this);
 
 
             try {
@@ -168,4 +143,5 @@ public class ReviewActivity extends AppCompatActivity {
 
         finish();
     }
+
 }

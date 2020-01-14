@@ -50,6 +50,29 @@ public class NotificationSnoozer extends BroadcastReceiver {
         }
     }
 
+    public static void ScheduleSecondReviewPushNotification(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("settings", Context.MODE_PRIVATE);
+        if(preferences.getBoolean("appUsageLengthEnabled", true)){
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+            Intent notification = new Intent(context, SendNotificationReceiver.class);
+            notification.putExtra("type", Defaults.APP_USAGE_REMINDER);
+            notification.putExtra("title", "Don't forget your second review");
+            notification.putExtra("id", 55);
+
+            PendingIntent intent = PendingIntent.getBroadcast(context, Defaults.APP_USAGE_REMINDER, notification, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            String sTimeToWait = preferences.getString("appUsageLength", Defaults.DEFAULT_APP_USAGE_LENGTH);
+            long timeToWait = convertTimeToLong(sTimeToWait);
+
+            if (alarmManager != null) {
+                alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToWait, intent);
+            } else {
+                Log.d("Review Activity", "Could not queue app usage reminder");
+            }
+        }
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         snoozeNotification(context, intent, true);
