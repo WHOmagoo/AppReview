@@ -11,5 +11,6 @@ public class OnBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         DailyNotification.updateDailyNotification(context);
+        NotificationSnoozer.ScheduleSecondReviewPushNotification(context);
     }
 }
