@@ -34,6 +34,8 @@ public class DailyNotification {
         String reminderTime = preferences.getString("reminderTime", Defaults.DEFAULT_REMINDER_TIME);
         boolean dailyReminderEnabled = preferences.getBoolean("dailyReminderEnabled", true);
         long lReminderTime = dailyReminderEnabled ? convertTimeToLong(reminderTime) : -1;
-        DailyNotification.updateDailyNotification(context, lReminderTime);
+        if(!preferences.getBoolean("firstSetup", true)) {
+            DailyNotification.updateDailyNotification(context, lReminderTime);
+        }
     }
 }
