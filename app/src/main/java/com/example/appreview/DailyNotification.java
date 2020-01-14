@@ -13,18 +13,17 @@ public class DailyNotification {
     private static void updateDailyNotification(Context context, long reminderTime){
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, SendNotificationReceiver.class);
-        intent.putExtra("type", 1);
+        intent.putExtra("type", Defaults.DAILY_NOTIFICATION_ID);
         intent.putExtra("title", "Don't forget to review the app today!");
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, Defaults.DAILY_NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         if (reminderTime != -1) {
             assert alarmMgr != null;
-            alarmMgr.cancel(alarmIntent);
-
+            // Use if you wish to schedule alarm to start tomorrow vs today.
             Calendar cur = Calendar.getInstance();
-
-            int remindHour = (int) (reminderTime / (1000*60));
+//
+            int remindHour = (int) (reminderTime / (1000*60*60));
             cur.set(Calendar.HOUR_OF_DAY, remindHour);
-            cur.set(Calendar.MINUTE, (int) ((reminderTime - remindHour) / 1000));
+            cur.set(Calendar.MINUTE, (int) ((reminderTime - remindHour) / (1000*60)));
 
             alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cur.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
         }
