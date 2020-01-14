@@ -23,7 +23,7 @@ public class DailyNotification {
 //
             int remindHour = (int) (reminderTime / (1000*60*60));
             cur.set(Calendar.HOUR_OF_DAY, remindHour);
-            cur.set(Calendar.MINUTE, (int) ((reminderTime - remindHour) / (1000*60)));
+            cur.set(Calendar.MINUTE, (int) ((reminderTime - (remindHour * 1000 * 60 * 60)) / (1000*60)));
 
             alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, cur.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
         }
