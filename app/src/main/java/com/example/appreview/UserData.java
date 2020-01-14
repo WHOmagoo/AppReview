@@ -203,7 +203,10 @@ public class UserData extends Observable implements Observer {
             return true;
         }
 
-        return TimeUnit.DAYS.convert(curDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS) == data.getInt("count", -1);
+        int dayCount = data.getInt("count", 1);
+        long daysBetween = TimeUnit.DAYS.convert(curDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS);
+
+        return  daysBetween == dayCount - 1;
     }
 
     public boolean hasAppUsed() {
