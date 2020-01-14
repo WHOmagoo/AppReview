@@ -86,7 +86,7 @@ public class SendNotificationReceiver extends BroadcastReceiver {
                 }
                 break;
             case Defaults.APP_USAGE_REMINDER:
-                if(!UserData.dayValid(context) || !data.getBoolean("DayFinished", false)){
+                if(UserData.dayValid(context) && data.getBoolean("ReviewedToday", false) && !data.getBoolean("DayFinished", false)){
                     sendPushNotification(context, intent);
                 }
                 break;
