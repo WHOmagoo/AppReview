@@ -66,7 +66,7 @@ public class NotificationSnoozer extends BroadcastReceiver {
             long timeToWait = convertTimeToLong(sTimeToWait);
 
             if (alarmManager != null) {
-                alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, timeToWait, intent);
+                alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,  SystemClock.elapsedRealtime() + timeToWait, intent);
             } else {
                 Log.d("Review Activity", "Could not queue app usage reminder");
             }
